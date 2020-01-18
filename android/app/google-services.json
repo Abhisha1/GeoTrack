@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "528386995883",
+    "firebase_url": "https://geoappw.firebaseio.com",
+    "project_id": "geoappw",
+    "storage_bucket": "geoappw.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528386995883:android:77ebf80312c1f099df29ee",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528386995883-2ls2dr1aii1nnjpcs0uh6i5gcamjks8d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_app",
+            "certificate_hash": "be2a811e6291877ce43ca7f83a25f02176ef1c44"
+          }
+        },
+        {
+          "client_id": "528386995883-8hb9eg0f6jqgvkd15hj2k3v8g7eoc863.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_657uzJvT8UFd7ZFEXt8GoU5ilts91XI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528386995883-8hb9eg0f6jqgvkd15hj2k3v8g7eoc863.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
