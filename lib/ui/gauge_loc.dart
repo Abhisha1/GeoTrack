@@ -9,7 +9,9 @@ class GaugeLoc extends StatefulWidget {
 }
 
 class _GaugeLocState extends State<GaugeLoc> {
-  LatLng _defLoc = new LatLng(-35.00, 137.00);
+  final LatLng _defLoc = new LatLng(-35.00, 137.00);
+  LatLng _markerPos = new LatLng(-35.00, 137.00);
+  final MapController controller = new MapController();
   @override
   void initState(){
     super.initState();
@@ -18,12 +20,16 @@ class _GaugeLocState extends State<GaugeLoc> {
     print("get user location");
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     LatLng userLoc = new LatLng(position.latitude, position.longitude);
+    if(controller.ready) {
+      controller.move(userLoc, controller.zoom);
+    }
     setState(() {
-      _defLoc = userLoc;
+      _markerPos = userLoc;
     });
   }
 
   Widget build(BuildContext context) {
+
     return new Scaffold(
         appBar: new AppBar(title: new Text('Gauge Location')),
         body: new FlutterMap(
@@ -43,7 +49,7 @@ class _GaugeLocState extends State<GaugeLoc> {
                   new Marker(
                       width: 45.0,
                       height: 45.0,
-                      point: _defLoc,
+                      point: _markerPos,
                       builder: (context) => new Container(
                         child: IconButton(
                           icon: Icon(Icons.location_on),
@@ -55,7 +61,8 @@ class _GaugeLocState extends State<GaugeLoc> {
                         ),
                       ))
                   ])
-              ]
+              ],
+            mapController: controller,
           ),
         floatingActionButton: FloatingActionButton(
           onPressed: _getUserLocation,
