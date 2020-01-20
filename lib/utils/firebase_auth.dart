@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/ui/mygauge.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,10 +81,6 @@ class AuthProvider {
   }
 
   Widget displayGauges() {
-//    retrieveUsersGauges();
-//    print("he");
-//    return Text("shit");
-//  }
     return FutureBuilder(
         future: retrieveUsersGauges(),
         builder: (context, projectSnap) {
@@ -108,6 +105,7 @@ class AuthProvider {
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {
                           print("show data");
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => MyGauge()));
                         });
                   });
             }

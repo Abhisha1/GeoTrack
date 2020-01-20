@@ -22,14 +22,22 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AddGaugeForm(),
             AuthProvider().displayGauges(),
-            RaisedButton(
-              child: Text("Log out"),
-              onPressed: (){
+            AddGaugeForm(),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.power_settings_new),
+              title: Text('Log off'),
+              onTap: (){
                 AuthProvider().logOut();
               },
-            )
+            ),
           ],
         ),
       ),

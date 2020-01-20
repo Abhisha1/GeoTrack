@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/gauge_loc.dart';
-import 'package:flutter_app/utils/firebase_auth.dart';
 
 
 class AddGaugeForm extends StatefulWidget {
@@ -42,8 +40,8 @@ class _AddGaugeFormState extends State<AddGaugeForm> {
         shape: CircleBorder(),
     ),
     child:
-    IconButton(
-          icon: Icon(Icons.add_circle),
+    FloatingActionButton(
+          child: Icon(Icons.add_circle),
           onPressed: (){
             setState(() {
               _pressed = true;
