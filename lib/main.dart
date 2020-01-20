@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/gauge_loc.dart';
 import 'package:flutter_app/ui/home.dart';
 import 'package:flutter_app/ui/login.dart';
 import 'package:flutter_app/ui/splash.dart';
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: GaugeLoc(),
+      home: MainScreen(),
     );
   }
 }

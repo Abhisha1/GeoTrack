@@ -111,22 +111,16 @@ class _AddGaugeFormState extends State<AddGaugeForm> {
       },
       isExpanded: true,
     ));
-    formWidget.add(new RaisedButton(
-        color: Colors.blue,
-        textColor: Colors.white,
-        child: new Text('Create gauge'),
-      onPressed: ()async{
-          print(_name);
-          print(_selectedIndicator);
-          print(_selectedMetric);
-        bool res = await AuthProvider().submitGauge(_name, _selectedIndicator, _selectedMetric);
-        if (!res){
-          print("Firestore submission failed");
+    formWidget.add(new FloatingActionButton(
+        tooltip: 'Next',
+        child: Icon(Icons.arrow_forward),
+      onPressed: (){
+          Navigator.push(context,MaterialPageRoute(builder: (context) => GaugeLoc(),
+          settings: RouteSettings(arguments: {
+            '_name': _name, '_selectedIndicator': _selectedIndicator, '_selectedMetric': _selectedMetric
+          })));
         }
-        if (res){
-          Navigator.push(context,MaterialPageRoute(builder: (context) => GaugeLoc()));
-        }
-      }));
+      ));
     return formWidget;
   }
 }
