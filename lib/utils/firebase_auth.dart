@@ -105,7 +105,10 @@ class AuthProvider {
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {
                           print("show data");
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => MyGauge()));
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => MyGauge(),
+                          settings: RouteSettings(arguments: {
+                          '_id': key.documentID,
+                          })));
                         });
                   });
             }
@@ -113,6 +116,23 @@ class AuthProvider {
         });
   }
 
-
+  Future<bool> submitEntry(
+      String id, double amount, DateTime date, double duration, String notes) async {
+    try {
+      var user = await _auth.currentUser();
+      await db.collection("Entries").add({
+        'gauge_id': id,
+        'amount': amount,
+        'date': date,
+        'duration': duration,
+        'notes': notes
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      print("error submitting data");
+      return false;
+    }
+  }
 
 }

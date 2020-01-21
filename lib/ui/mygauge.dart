@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/addentry.dart';
 
 class MyGauge extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,7 +29,11 @@ class MyGauge extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add_circle),
             onPressed: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context) => AddEntryForm()));
+              Map data = ModalRoute.of(context).settings.arguments;
+              Navigator.push(context,MaterialPageRoute(builder: (context) => AddEntryForm(),
+                  settings: RouteSettings(arguments: {
+                    '_id': data["_id"],
+                  })));
             },
           )),
       ),
