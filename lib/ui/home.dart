@@ -22,10 +22,16 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AuthProvider().displayGauges(),
-            AddGaugeForm(),
+            AuthProvider().displayGauges()
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        heroTag: null,
+        onPressed: (){
+          Navigator.push(context,MaterialPageRoute(builder: (context) => AddGaugeForm()));
+        },
       ),
       drawer: Drawer(
         child: ListView(

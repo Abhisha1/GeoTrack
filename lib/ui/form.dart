@@ -8,7 +8,6 @@ class AddGaugeForm extends StatefulWidget {
 }
 
 class _AddGaugeFormState extends State<AddGaugeForm> {
-  bool _pressed = false;
   final _formKey = GlobalKey<FormState>();
   List<String> metricList = [];
   String _name = '';
@@ -30,29 +29,23 @@ class _AddGaugeFormState extends State<AddGaugeForm> {
 
   @override
   Widget build(BuildContext context) {
-    if(!_pressed)
-      return Material(
-        color: Colors.white,
-        child: Center(
-        child: Ink(
-        decoration: const ShapeDecoration(
-        color: Colors.lightBlue,
-        shape: CircleBorder(),
-    ),
-    child:
-    FloatingActionButton(
-          child: Icon(Icons.add_circle),
+    return new Scaffold(
+      appBar: new AppBar(title: Text("Add new sensor")),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            children: getFormWidget(),
+          ),
+        ),
+      floatingActionButton: new FloatingActionButton(
+          tooltip: 'Next',
+          child: Icon(Icons.arrow_forward),
           onPressed: (){
-            setState(() {
-              _pressed = true;
-            });
+            Navigator.push(context,MaterialPageRoute(builder: (context) => GaugeLoc(),
+                settings: RouteSettings(arguments: {
+                  '_name': _name, '_selectedIndicator': _selectedIndicator, '_selectedMetric': _selectedMetric
+                })));
           }
-      ),),),);
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: getFormWidget(),
       ),
     );
   }
@@ -60,7 +53,9 @@ class _AddGaugeFormState extends State<AddGaugeForm> {
   List<Widget> getFormWidget(){
     List<Widget> formWidget = new List();
     formWidget.add(new TextFormField(
-      decoration: InputDecoration(labelText: 'Enter gauge name', hintText: 'Gauge Name'),
+      decoration: InputDecoration(
+          icon: Icon(Icons.nature_people),
+          labelText: 'Enter sensor name', hintText: 'Sensor Name'),
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a name';
@@ -109,16 +104,6 @@ class _AddGaugeFormState extends State<AddGaugeForm> {
       },
       isExpanded: true,
     ));
-    formWidget.add(new FloatingActionButton(
-        tooltip: 'Next',
-        child: Icon(Icons.arrow_forward),
-      onPressed: (){
-          Navigator.push(context,MaterialPageRoute(builder: (context) => GaugeLoc(),
-          settings: RouteSettings(arguments: {
-            '_name': _name, '_selectedIndicator': _selectedIndicator, '_selectedMetric': _selectedMetric
-          })));
-        }
-      ));
     return formWidget;
   }
 }

@@ -108,6 +108,8 @@ class AuthProvider {
                           Navigator.push(context,MaterialPageRoute(builder: (context) => MyGauge(),
                           settings: RouteSettings(arguments: {
                           '_id': key.documentID,
+                            '_indicator': key["indicator"],
+                            '_metric': key["metric"]
                           })));
                         });
                   });
@@ -134,5 +136,21 @@ class AuthProvider {
       return false;
     }
   }
+
+  Future<List<DocumentSnapshot>> retrieveGaugesRecords(String gaugeId) async {
+    print(gaugeId);
+    var data = await db
+        .collection("Entries")
+        .where("gauge_id", isEqualTo: gaugeId)
+        .getDocuments()
+        .then((snapshot) {
+          if(snapshot.documents.isNotEmpty){
+            print(snapshot.documents.first.documentID);
+          }
+      return snapshot.documents;
+    });
+    return data;
+  }
+
 
 }

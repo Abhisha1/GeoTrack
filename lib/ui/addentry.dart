@@ -46,8 +46,10 @@ class _AddEntryFormState extends State<AddEntryForm> {
 
   @override
   Widget build(BuildContext context) {
+    Map data = ModalRoute.of(context).settings.arguments;
+    String _indicator = data["_indicator"];
     return Scaffold(
-        appBar: new AppBar(title: Text('Home Page')),
+        appBar: new AppBar(title: Text('Add new $_indicator reading')),
         body: Form(
           key: _formKey,
           child: ListView(
@@ -72,11 +74,14 @@ class _AddEntryFormState extends State<AddEntryForm> {
   }
 
   List<Widget> getFormWidget() {
+    Map data = ModalRoute.of(context).settings.arguments;
+    String _metric = data["_metric"];
     List<Widget> formWidget = new List();
-    formWidget.add(new ListTile(title: Text("Amount")));
+    formWidget.add(new ListTile(title: Text("Amount ($_metric)")));
     formWidget.add(new Slider(
         label: "$_amount",
         max: 100,
+        activeColor: Colors.indigoAccent.shade200,
         min: 0,
         divisions: 100,
         value: _amount,
@@ -96,6 +101,7 @@ class _AddEntryFormState extends State<AddEntryForm> {
     formWidget.add(new ListTile(title: Text("Duration")));
     formWidget.add(new Slider(
         label: "$_duration",
+        activeColor: Colors.indigoAccent.shade200,
         max: 24,
         min: 0,
         divisions: 24,
@@ -109,6 +115,7 @@ class _AddEntryFormState extends State<AddEntryForm> {
       keyboardType: TextInputType.multiline,
       maxLines: null,
       decoration: InputDecoration(
+          icon: Icon(Icons.note_add),
           labelText: 'Enter notes', hintText: 'Any comments about reading'),
       onChanged: (value) {
         setState(() {
