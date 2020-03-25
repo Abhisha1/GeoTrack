@@ -4,8 +4,95 @@ import 'package:flutter_app/ui/addentry.dart';
 import 'package:flutter_app/utils/firebase_auth.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:flutter_app/ui/viewentry.dart';
+import 'package:intl/intl.dart';
+
 
 class MyGauge extends StatelessWidget {
+
+  buildEventList(data, dates,documentIds){
+    return new Expanded(
+        child: ListView.builder(
+        itemCount: dates.length,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          return new ListTile(
+              leading: Icon(Icons.receipt),
+              title: Text(dates[index].toString()),
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => ViewEntry(),
+                    settings: RouteSettings(arguments: {
+                      '_recordId': documentIds[index],
+                      '_id': data["_id"],
+                      '_indicator': data["indicator"],
+                      '_metric': data["metric"]
+                    })));
+              });
+  }));
+  }
+
+  buildCalendar(data, dates,documentIds,  _currentDate, _markedDateMap, context){
+    return Scaffold(
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            appBar: AppBar(
+              bottom: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.date_range),
+                    text: "Calendar",),
+                  Tab(icon: Icon(Icons.equalizer), text: "Charts"),
+                ],
+              ),
+              title: Text('Tabs Demo'),
+
+            ),
+            body: TabBarView(
+              children: [Column(
+                children: <Widget>[ CalendarCarousel<Event>(
+                  onDayPressed: (DateTime date, List<Event> events) {
+                    _currentDate = date;
+                    print("hello");
+                  },
+                  weekendTextStyle: TextStyle(
+                    color: Colors.red,
+                  ),
+                  thisMonthDayBorderColor: Colors.grey,
+                  weekFormat: false,
+                  markedDatesMap: _markedDateMap,
+                  height: 420.0,
+                  selectedDateTime: _currentDate,
+                  daysHaveCircularBorder: false,
+
+                  /// null for not rendering any border, true for circular border, false for rectangular border
+                ),
+                dates.length>0 ? buildEventList(data, dates, documentIds): Text("No entries")
+                ]
+              ),
+                Icon(Icons.directions_transit),
+              ],
+
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                Map data = ModalRoute
+                    .of(context)
+                    .settings
+                    .arguments;
+                Navigator.push(context, MaterialPageRoute(builder: (
+                    context) => AddEntryForm(),
+                    settings: RouteSettings(arguments: {
+                      '_id': data["_id"],
+                      '_metric': data['_metric'],
+                      '_indicator': data['_indicator']
+                    })));
+              },
+            )),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,108 +100,57 @@ class MyGauge extends StatelessWidget {
     EventList<Event> _markedDateMap = new EventList<Event>(
       events: {},
     );
-    return Scaffold(
-      body: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: TabBar(
+    List dates = [];
+    List documentIds = [];
+    Map data = ModalRoute.of(context).settings.arguments;
+    return FutureBuilder(
+        future: AuthProvider().retrieveGaugesRecords(data["_id"]),
+        builder: (context, projectSnap) {
+          if (projectSnap.connectionState == ConnectionState.waiting &&
+              projectSnap.hasData == false) {
+            return  DefaultTabController(
+              length: 2,
+              child: Scaffold(
+              appBar: AppBar(
+              bottom: TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.date_range), text: "Calendar",),
-                Tab(icon: Icon(Icons.equalizer), text: "Charts"),
+              Tab(icon: Icon(Icons.date_range),
+              text: "Calendar",),
+              Tab(icon: Icon(Icons.equalizer), text: "Charts"),
               ],
-            ),
-            title: Text('Tabs Demo'),
+              ),
+              title: Text('Tabs Demo'),
 
+              ),
+              body: TabBarView(
+              children: [Container(
+              margin: EdgeInsets.symmetric(horizontal: 16.0),
+              child: LinearProgressIndicator()
           ),
-          body: TabBarView(
-            children: [Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.0),
-          child: CalendarCarousel<Event>(
-            onDayPressed: (DateTime date, List<Event> events) {
-               _currentDate = date;
-               print("hello");
-            },
-            weekendTextStyle: TextStyle(
-              color: Colors.red,
-            ),
-            thisMonthDayBorderColor: Colors.grey,
-//      weekDays: null, /// for pass null when you do not want to render weekDays
-//      headerText: Container( /// Example for rendering custom header
-//        child: Text('Custom Header'),
-//      ),
-            customDayBuilder: (   /// you can provide your own build function to make custom day containers
-                bool isSelectable,
-                int index,
-                bool isSelectedDay,
-                bool isToday,
-                bool isPrevMonthDay,
-                TextStyle textStyle,
-                bool isNextMonthDay,
-                bool isThisMonthDay,
-                DateTime day,
-                ) {
-              /// If you return null, [CalendarCarousel] will build container for current [day] with default function.
-              /// This way you can build custom containers for specific days only, leaving rest as default.
-
-              // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
-              Map data = ModalRoute.of(context).settings.arguments;
-              print(data.toString());
-              AuthProvider().retrieveGaugesRecords(data["_id"]).then((value){
-                value.forEach((f){
-
-                });
-              });
-              return FutureBuilder(
-                  future: AuthProvider().retrieveGaugesRecords(data["_id"]),
-                  builder: (context, projectSnap) {
-                      if(projectSnap.connectionState == ConnectionState.done){
-                        if(projectSnap.hasData == true){
-                          return Icon(Icons.add);
-                          }
-                        else{
-                          return new Container();
-                        }
-                      }
-                      else{
-                        return new Container();
-                      }
-    } );
-
-
-
-//              if (day.day == 15) {
-//                return Center(
-//                  child: Icon(Icons.local_airport),
-//                );
-//              } else {
-//                return null;
-//              }
-            },
-            weekFormat: false,
-            markedDatesMap: _markedDateMap,
-            height: 420.0,
-            selectedDateTime: _currentDate,
-            daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
-          ),
-        ),
-              Icon(Icons.directions_transit),
-            ],
-
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: (){
-              Map data = ModalRoute.of(context).settings.arguments;
-              Navigator.push(context,MaterialPageRoute(builder: (context) => AddEntryForm(),
-                  settings: RouteSettings(arguments: {
-                    '_id': data["_id"],
-                    '_metric': data['_metric'],
-                    '_indicator': data['_indicator']
-                  })));
-            },
-          )),
-      ),
-    );
+                Icon(Icons.directions_transit),
+              ])));
+          }
+          else{
+            if (projectSnap.hasData == false){
+              return buildCalendar(data, dates, documentIds, _currentDate, _markedDateMap, context);
+            }
+            else{
+              print(projectSnap.data);
+              for (DocumentSnapshot x in projectSnap.data) {
+                dates.add(x["date"].toDate());
+                documentIds.add(x.documentID);
+                _markedDateMap.add(
+                    x["date"].toDate(),
+                    new Event(
+                        date: x["date"].toDate(),
+                        title: x["date"].toString(),
+                        icon: Icon(Icons.receipt)
+                    )
+                );
+              }
+              return buildCalendar(data, dates, documentIds, _currentDate, _markedDateMap, context);
+            }
+          }
+        });
   }
 }

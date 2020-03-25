@@ -74,7 +74,6 @@ class AuthProvider {
         .where("user", isEqualTo: user.email)
         .getDocuments()
         .then((snapshot) {
-      print(snapshot.documents.first.documentID);
       return snapshot.documents;
     });
     return data;
@@ -91,7 +90,6 @@ class AuthProvider {
             if (projectSnap.hasData == false)
               return Text("No gauges");
             else {
-              print(projectSnap.data.toString());
               return new ListView.builder(
                   itemCount: projectSnap.data.length,
                   scrollDirection: Axis.vertical,
@@ -104,7 +102,6 @@ class AuthProvider {
                         subtitle: Text(key["indicator"]),
                         trailing: Icon(Icons.keyboard_arrow_right),
                         onTap: () {
-                          print("show data");
                           Navigator.push(context,MaterialPageRoute(builder: (context) => MyGauge(),
                           settings: RouteSettings(arguments: {
                           '_id': key.documentID,
@@ -138,19 +135,28 @@ class AuthProvider {
   }
 
   Future<List<DocumentSnapshot>> retrieveGaugesRecords(String gaugeId) async {
-    print(gaugeId);
     var data = await db
         .collection("Entries")
         .where("gauge_id", isEqualTo: gaugeId)
         .getDocuments()
         .then((snapshot) {
           if(snapshot.documents.isNotEmpty){
-            print(snapshot.documents.first.documentID);
           }
       return snapshot.documents;
     });
     return data;
   }
-
+  Future<List<DocumentSnapshot>> retrieveRecord(String recordId) async {
+    var data = await db
+        .collection("Entries")
+        .where("key", isEqualTo: recordId)
+        .getDocuments()
+        .then((snapshot) {
+      if(snapshot.documents.isNotEmpty){
+      }
+      return snapshot.documents;
+    });
+    return data;
+  }
 
 }
